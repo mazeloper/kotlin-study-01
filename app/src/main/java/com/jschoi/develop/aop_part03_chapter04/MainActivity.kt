@@ -3,12 +3,15 @@ package com.jschoi.develop.aop_part03_chapter04
 
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
+import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jschoi.develop.aop_part03_chapter04.adapter.BookAdapter
 import com.jschoi.develop.aop_part03_chapter04.api.BookService
 import com.jschoi.develop.aop_part03_chapter04.databinding.ActivityMainBinding
 import com.jschoi.develop.aop_part03_chapter04.model.BestSallerDTO
+import com.jschoi.develop.aop_part03_chapter04.model.SearchBookDTO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         private const val TAG = "MainActivity"
     }
 
+    private lateinit var bookService: BookService
     private lateinit var binding: ActivityMainBinding
     private lateinit var bookAdapter: BookAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +44,31 @@ class MainActivity : AppCompatActivity() {
         initBookRecyclerView()
         createRetrofitService()
 
+        binding.edSearch.setOnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == MotionEvent.ACTION_DOWN) {
+                search(binding.edSearch.text.toString())
+                return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
+    }
+
+    private fun search(keyword: String) {
+        bookService.getBooksByName(getString(R.string.interpark_api_key), keyword)
+            .enqueue(object : Callback<SearchBookDTO> {
+                override fun onResponse(
+                    call: Call<SearchBookDTO>,
+                    response: Response<SearchBookDTO>
+                ) {
+                    if (response.isSuccessful.not()) return
+
+                    bookAdapter.submitList(response.body()?.books.orEmpty())
+                }
+
+                override fun onFailure(call: Call<SearchBookDTO>, t: Throwable) {
+                    Log.e(TAG, t.toString())
+                }
+            })
     }
 
     private fun initBookRecyclerView() {
@@ -57,8 +86,8 @@ class MainActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create()) // Convert
             .build()
 
-        val bookService = retrofit.create(BookService::class.java)
-        bookService.getBestSellerBooks("BCB30A5A49176E6BC00D71A170C75E231F3C3407446C1E08648482339A4C509B")
+        bookService = retrofit.create(BookService::class.java)
+        bookService.getBestSellerBooks(getString(R.string.interpark_api_key))
             .enqueue(object : Callback<BestSallerDTO> {
                 override fun onResponse(
                     call: Call<BestSallerDTO>,
@@ -68,12 +97,10 @@ class MainActivity : AppCompatActivity() {
                     if (response.isSuccessful.not()) return
 
                     response.body()?.let {
-                        Log.d(TAG, it.toString())
                         it.books.forEach { book ->
                             Log.d(TAG, book.toString())
                         }
-                        // List Change :: 다시 그려짐
-                        bookAdapter.submitList(it.books)
+                        bookAdapter.submitList(it.books)    // List Change :: 다시 그려짐
                     }
                 }
 

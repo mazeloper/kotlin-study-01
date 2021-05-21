@@ -7,5 +7,5 @@ data class Book(
     @SerializedName("itemId") val id: Long,
     @SerializedName("title") val title: String,
     @SerializedName("description") val description: String,
-    @SerializedName("convertSmallUrl") val convertSmallUrl: String
+    @SerializedName("coverSmallUrl") val coverSmallUrl: String
 )

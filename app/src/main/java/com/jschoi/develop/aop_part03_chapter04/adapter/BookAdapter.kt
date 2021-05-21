@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.jschoi.develop.aop_part03_chapter04.databinding.ItemBookBinding
 import com.jschoi.develop.aop_part03_chapter04.model.Book
 
@@ -32,11 +33,11 @@ class BookAdapter : ListAdapter<Book, BookAdapter.BookItemViewHolder>(diffUtil) 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookItemViewHolder {
         return BookItemViewHolder(
-            ItemBookBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
+                ItemBookBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                )
         )
     }
 
@@ -45,10 +46,16 @@ class BookAdapter : ListAdapter<Book, BookAdapter.BookItemViewHolder>(diffUtil) 
     }
 
     inner class BookItemViewHolder(private val binding: ItemBookBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+            RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Book) {
-            binding.tvTitle.text = item.title
+            binding.titleTextView.text = item.title
+            binding.descTextView.text = item.description
+
+            Glide.with(binding.coverImageView.context)
+                    .load(item.coverSmallUrl)
+                    .into(binding.coverImageView)
+
         }
     }
 }

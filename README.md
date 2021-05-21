@@ -7,7 +7,11 @@
 * Local DB 를 이용하여 검색 기록을 저장하고 삭제할 수 있음.
 * Local DB 를 이용하여 개인 리뷰를 저장할 수 있음.
 
+
+
 ## 이 챕터를 통해 배우는 것
+
+
 
 * RecyclerView 사용하기
     *ListAdapter 와 dittUtil 클래스를 사용*
