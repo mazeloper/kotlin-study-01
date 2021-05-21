@@ -10,6 +10,12 @@
 ## 이 챕터를 통해 배우는 것
 
 * RecyclerView 사용하기
+    *ListAdapter 와 dittUtil 클래스를 사용*
+    > notifyDataSetChanged 는 지연이 길어지면 UX에 영향을 미치기 때문에, 가능한 적은 리소스와 함께 빠른 작업이 이루어져야 한다.
+      목록 변경 시 호출하여 아이템 업데이트 하지만 비용이 많이든다.
+      아를 이해 DiffUtil 클래스가 개발되었다.
+
+
 * View Binding 사용하기
 * Retrofit 사용하기 (API 호출)
 * Glide 사용하기 (이미지 로딩)
