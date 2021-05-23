@@ -24,5 +24,18 @@
 * Retrofit 사용하기 (API 호출)
 * Glide 사용하기 (이미지 로딩)
 * Android Room 사용하기
+
+    - 3가지 개념
+
+    *Database (데이터베이스)*
+    > 저장하는 데이터의 집합 단위
+
+    *Entity(항목)*/
+    > 데이터베이스 내의 테이블
+
+    *DAO*/
+    > 데이터베이스에 접근하는 함수(insert, update, delete)를 제공
+
+
 * Open API 사용해보기
 
