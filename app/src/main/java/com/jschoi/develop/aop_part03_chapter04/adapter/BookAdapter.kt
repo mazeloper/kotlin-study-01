@@ -14,7 +14,8 @@ import com.jschoi.develop.aop_part03_chapter04.model.Book
  *
  * ViewBinding 사용 예
  */
-class BookAdapter : ListAdapter<Book, BookAdapter.BookItemViewHolder>(diffUtil) {
+class BookAdapter(private val itemClickedListener: (Book) -> Unit) :
+    ListAdapter<Book, BookAdapter.BookItemViewHolder>(diffUtil) {
 
     companion object {
         // notifyDataSetChanged 는 지연이 길어지면 UX에 영향을 미치기 때문에, 가능한 적은 리소스와 함께 빠른 작업이 이루어져야 한다.
@@ -33,11 +34,11 @@ class BookAdapter : ListAdapter<Book, BookAdapter.BookItemViewHolder>(diffUtil) 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookItemViewHolder {
         return BookItemViewHolder(
-                ItemBookBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                )
+            ItemBookBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
     }
 
@@ -46,16 +47,19 @@ class BookAdapter : ListAdapter<Book, BookAdapter.BookItemViewHolder>(diffUtil) 
     }
 
     inner class BookItemViewHolder(private val binding: ItemBookBinding) :
-            RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Book) {
             binding.titleTextView.text = item.title
             binding.descTextView.text = item.description
 
-            Glide.with(binding.coverImageView.context)
-                    .load(item.coverSmallUrl)
-                    .into(binding.coverImageView)
+            binding.root.setOnClickListener {
+                itemClickedListener(item)
+            }
 
+            Glide.with(binding.coverImageView.context)
+                .load(item.coverLargeUrl)
+                .into(binding.coverImageView)
         }
     }
 }

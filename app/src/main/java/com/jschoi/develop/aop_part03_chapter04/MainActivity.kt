@@ -2,6 +2,7 @@ package com.jschoi.develop.aop_part03_chapter04
 
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -59,7 +60,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initBookRecyclerView() {
-        bookAdapter = BookAdapter()
+        bookAdapter = BookAdapter(itemClickedListener = {
+            val intent = Intent(this, DetailActivity::class.java)
+            // 직렬화하여 클래스 그대로 넘김. parcelize 플러그인 추가
+            intent.putExtra("EXTRA_BOOK", it)
+            startActivity(intent)
+        })
 
         binding.bookRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -97,11 +103,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRoomDB() {
-        db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "BookSearchDatabase"
-        ).build()
+        db = getAppDatabase(this)
 
     }
 
